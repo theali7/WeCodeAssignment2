@@ -1,5 +1,6 @@
 import hashlib
 import os
+import time
 from pathlib import Path
 
 
@@ -23,3 +24,17 @@ def migrate():
                 continue
             connection.execute(source)
             connection.execute("INSERT INTO wecode_migrations VALUES (%s,%s)", (path.name, checksum))
+
+
+def migrate_with_retry(attempts=10, interval=2):
+    """Bound startup retries for a database provisioned alongside the app."""
+    import psycopg
+    for attempt in range(attempts):
+        try:
+            migrate()
+            return
+        except psycopg.OperationalError:
+            if attempt == attempts - 1:
+                raise
+            print("Waiting for assignment database readiness...", flush=True)
+            time.sleep(interval)

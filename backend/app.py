@@ -12,6 +12,7 @@ import secrets
 import threading
 import time
 from uuid import uuid4, UUID
+from urllib.parse import urlsplit
 
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.encoders import jsonable_encoder
@@ -42,6 +43,20 @@ def secret():
     if len(value) < 32:
         raise RuntimeError("AUTH_SECRET must contain at least 32 characters")
     return value
+
+
+def public_origin():
+    """Use an operator-set HTTPS origin; never trust client forwarding headers."""
+    value = os.environ.get("PUBLIC_ORIGIN") or os.environ.get("RENDER_EXTERNAL_URL") or ""
+    if not value:
+        return None
+    parsed = urlsplit(value)
+    if (parsed.scheme != "https" or not parsed.hostname or parsed.username is not None
+        or parsed.password is not None or parsed.path not in ("", "/")
+        or parsed.query or parsed.fragment or any(c.isspace() for c in value)):
+        raise ValueError("PUBLIC_ORIGIN/RENDER_EXTERNAL_URL must be one HTTPS origin")
+    parsed.port
+    return "https://" + parsed.netloc
 
 
 def rate_limit(request):
@@ -96,7 +111,8 @@ def identity(request, connection):
 @asynccontextmanager
 async def lifespan(app):
     secret()
-    db.migrate()
+    public_origin()
+    db.migrate_with_retry()
     yield
 
 
@@ -111,7 +127,8 @@ async def limits_and_headers(request, call_next):
     if request.method not in ("GET", "HEAD", "OPTIONS"):
         # Same-origin browser writes only. API/CI clients without Origin still need authentication.
         origin = request.headers.get("origin")
-        if origin and origin != str(request.base_url).rstrip("/"):
+        expected_origin = public_origin() or str(request.base_url).rstrip("/")
+        if origin and origin != expected_origin:
             return JSONResponse({"message": "Cross-origin write rejected"}, status_code=403)
     response = await call_next(request)
     response.headers["Content-Security-Policy"] = "connect-src 'self'"
