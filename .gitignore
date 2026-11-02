@@ -23,3 +23,4 @@ logs/
 !.env.example
 __pycache__/
 .venv/
+e2e-results/
