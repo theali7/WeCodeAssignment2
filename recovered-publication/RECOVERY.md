@@ -1,12 +1,14 @@
-# Published WeCode recovery — incomplete
+# Recovered published WeCode frontend
 
 Source: https://wecode-design-preview.alishchatik.chatgpt.site/
-Captured: 2026-11-02.
+Captured on 2026-11-02 using the owner-authorized browser.
 
-These are browser-delivered production files, not the original React/TypeScript source. They are preserved as a recovery checkpoint and are not connected to the assignment build yet. Existing source code and Docker configuration are unchanged.
+This directory contains browser-delivered production JavaScript/CSS, technology icons and five loaded Gilroy fonts. This is a recovered frontend build, not the original React/TypeScript source. The older editable code remains under src/; changing it does not change this preview.
 
-Recovered: main JavaScript bundle, main stylesheet, loaded Gilroy fonts and technology icons.
+Recovered: main application, Problems, shared problem data, LearnLanguages, LearningWay, and all stylesheets in the main application's dependency map. index.html is a reconstructed minimal entrypoint. The hosting editor widget is excluded.
 
-Still missing: LearningWay-4MjyILaX.js, LearnLanguages-IeWZ6ZFn.js, Problems-BXBgAyxc.js, problems-DIwfYwGF.js, problems-O60Sk_Uk.css, LearningWay-ka55X9Oq.css, LearnLanguages-B4tB6XDo.css, and any further dependencies they reveal. The stylesheet also references Gilroy-Black.ttf, which was not loaded in the observed page.
+Docker Compose's preview target now serves this directory. The source-preview target builds the older source separately. The existing CSP blocks external connections, so local signup/login and remote learning-data operations are disabled until an isolated backend is implemented. No production database or hosted-site changes were made.
 
-The live site requests sign-in before opening the dashboard. Full functionality and equivalence have not been verified. Do not present this checkpoint as completed source restoration or deployment.
+The stylesheet also references Gilroy-Black.ttf, which was not observed or recovered. Five other loaded weights are included. Full visual/functional equivalence has not been established. The original site was inspected after owner login: its Problems list shows 108 problems and its Learn Languages and Learning Way navigation loads the corresponding modules.
+
+Validation: local JavaScript syntax and relative module/dependency graph checks. Docker build/run still requires a working daemon connection; do not treat this frontend recovery as completing assignment issues #2-#4.

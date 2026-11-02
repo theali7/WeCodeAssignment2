@@ -1,6 +1,6 @@
-# Docker: initial static preview
+# Docker: recovered published frontend
 
-Related issues: #2, #3, #4. This is an intermediate setup, not the completed full-stack assignment.
+This remains an intermediate step for issues #2, #3 and #4. The backend and isolated PostgreSQL integration are not complete.
 
 ## Run
 
@@ -13,23 +13,15 @@ docker compose up --build -d
 docker compose ps
 ```
 
-Open http://localhost:8080. Check `curl -f http://localhost:8080/healthz` (expected `ok`). The first build downloads the base images and npm packages.
+Open http://localhost:8080. `curl -f http://localhost:8080/healthz` should return `ok`.
 
-## Scope
+The default `preview` target serves recovered-publication/, captured from the published frontend, including the Problems, Learn Languages and Learning Way modules. See recovered-publication/RECOVERY.md for provenance and limitations. Original older editable React code remains in src/. To build that older version explicitly, use `docker build --target source-preview -t wecode-old-source .`.
 
-The image builds the React frontend with the existing npm lockfile and serves the static output with Nginx. Compose currently defines only the preview web service. The browser's connect-src policy blocks requests to external services, including the original Supabase project. Account and learning-data features therefore do not work in this preview. Do not regard the health endpoint as a database or functional test.
-
-Next: add the application backend and an isolated PostgreSQL database, connect the frontend to that stack, and verify account/learning flows. The original source contains Supabase calls rather than a SQLite backend; the database requirement needs to be mapped explicitly. Do not apply imported Supabase SQL directly to plain PostgreSQL without adapting its auth dependencies.
-
-The original repository and hosted site are unchanged.
-
-## Logs and stop
+External connections remain blocked by the existing CSP, including calls to production Supabase. Account and remote learning-data features therefore do not work locally. This is intentional isolation while the assignment backend is being prepared; it is not a completed full-stack deployment.
 
 ```sh
 docker compose logs --tail=100 web
 docker compose down
 ```
 
-## Verification status
-
-The agent could not build or run the image because its environment cannot access the Docker daemon socket. A successful build, healthy container and browser check are required before closing the Docker issues.
+The agent verified JavaScript syntax, relative imports and the dependency map, but could not verify the Docker build/run because access to the Docker daemon is unavailable in its execution environment. The recovered stylesheet references an unavailable Gilroy-Black.ttf weight; other captured weights are included.
