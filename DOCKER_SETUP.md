@@ -35,7 +35,7 @@ The backend implements the limited Supabase client contract actually used by the
 - The lessons table starts empty. No production lesson rows or user progress were extracted. Learning Way completion records can be saved in the new database.
 - No SQLite database was found in the imported tracked project. This is an isolated PostgreSQL schema setup, not a claimed SQLite data migration. The original Supabase SQL depends on its auth schema and is not applied to this database.
 - The saved Sites source was recovered at source commit 7bab7f837f32a537ad691e99af5b5c719f37205b. Runtime workers are imported here; the Docker UI still serves the identical captured frontend, and src/ still contains the older imported source. Migrating editable frontend source is separate. Five recovered Gilroy weights are included.
-- This is a local assignment foundation. Cloud deployment, full CI/CD redeployment, SMTP/OAuth and production hardening remain separate tasks. The credential-attempt limiter is per process; the image intentionally runs one worker.
+- This is a local assignment foundation. Render demonstration hosting and CI-gated redeployment are verified as described in README.md. AWS/GCP infrastructure, SMTP/OAuth and production hardening remain separate tasks. The credential-attempt limiter is per process; the image intentionally runs one worker.
 
 ## Validation
 
@@ -43,7 +43,7 @@ The backend implements the limited Supabase client contract actually used by the
 python -m unittest discover -s tests -v
 ```
 
-Four security/frontend-wiring tests run without a database. Seven integration tests require `WECODE_TEST_DATABASE_URL` pointing to a disposable test database. GitHub Actions provisions PostgreSQL and runs all tests plus a Docker build and Compose validation. Tests only remove the random accounts they create. CI is not a substitute for checking the actual browser signup/login/progress flow.
+Security/frontend-wiring and hosting unit tests run without a database. Seven integration tests require `WECODE_TEST_DATABASE_URL` pointing to a disposable test database. GitHub Actions provisions PostgreSQL and runs all tests plus a Docker build and Compose validation. Tests only remove the random accounts they create. CI is not a substitute for checking the actual browser signup/login/progress flow.
 
 Inspect runtime problems with `docker compose logs --tail=100 web db`. Stop with `docker compose down`; this preserves the database volume. Do not use `down -v` unless you intend to delete all local assignment accounts and progress.
 

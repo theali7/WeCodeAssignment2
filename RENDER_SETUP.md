@@ -32,3 +32,7 @@ The account database is new and isolated; local/production accounts are not copi
 As checked on 2026-11-02, free web services sleep after 15 idle minutes and may take about a minute to wake. Free PostgreSQL expires 30 days after creation, becomes inaccessible and is later deleted after the grace period unless upgraded. This is a temporary demonstration, not indefinite free hosting. No paid upgrade is authorized. Record the actual database expiration from the dashboard and export any needed demonstration data before then. Use synthetic demonstration data.
 
 Sources: https://render.com/docs/free , https://render.com/docs/blueprint-spec , https://render.com/docs/environment-variables , https://render.com/docs/web-services .
+
+## Observed deployment evidence
+
+Public URL: https://wecode-assignment2.onrender.com . The owner confirmed registration and progress persistence. A supplied Render Deploys screenshot shows commit 77fdb3e Live with trigger Auto-Deploy. Both corresponding GitHub workflows succeeded (links in README.md). Full public-host acceptance above has not all been independently checked; issue #6 remains open for the Compose requirement. AWS/GCP was deferred, not completed.
