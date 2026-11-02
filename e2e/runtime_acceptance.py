@@ -95,6 +95,8 @@ class RuntimeAcceptance(core.BrowserTests):
              'SELECT id,fee * 12 AS annual_fee FROM courses ORDER BY id;']
         for index,(parameters,expression) in enumerate(expressions):
             self.page.locator('.lw-task-list > button').nth(index).click()
+            expect(self.page.get_by_role('group', name='Editor language', exact=True).get_by_role(
+                'button', name=language, exact=True)).to_have_attribute('aria-pressed', 'true')
             if language == 'Python':
                 source=f'def solve({parameters}):\n    return {expression}\n'
             elif language == 'Java':
