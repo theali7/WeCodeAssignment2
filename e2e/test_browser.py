@@ -127,6 +127,13 @@ class BrowserTests(unittest.TestCase):
         expect(self.page.locator("#mobile-nav")).to_be_visible()
         self.page.locator("#mobile-nav").get_by_role("link",name="Algorithms",exact=True).click()
         expect(self.page.locator("#mobile-nav")).to_have_count(0)
+        self.page.set_viewport_size({"width":1440,"height":1000})
+        trigger=self.page.locator(".header-actions").get_by_role("button",name="Log in",exact=True)
+        trigger.click()
+        expect(self.page.get_by_role("dialog")).to_be_visible()
+        self.page.get_by_role("button",name="Close",exact=True).press("Escape")
+        expect(self.page.get_by_role("dialog")).to_have_count(0)
+        expect(trigger).to_be_focused()
 
     def test_02_signup_validation_success_duplicate(self):  # #12
         self.page.goto(BASE)
@@ -144,6 +151,7 @@ class BrowserTests(unittest.TestCase):
         panel.get_by_role("button",name="Create account",exact=True).click()
         self.workspace()
         self.page.get_by_role("button",name=re.compile("Sign out")).click()
+        self.page.reload()
         self.page.locator(".header-actions").get_by_role("button",name=re.compile("Sign up")).click()
         panel.get_by_label("Name",exact=True).fill("E2E learner")
         panel.get_by_label("Email",exact=True).fill(self.email)
@@ -173,8 +181,8 @@ class BrowserTests(unittest.TestCase):
             self.page.get_by_role("button",name="Edit your learning preferences",exact=True).click()
             dialog=self.page.get_by_role("dialog")
             dialog.get_by_label("Display name",exact=True).fill("Updated E2E")
-            dialog.get_by_label("My focus",exact=True).select_option(language)
-            dialog.get_by_label("Experience",exact=True).select_option(level)
+            dialog.get_by_role("combobox",name=re.compile("^My focus")).select_option(language)
+            dialog.get_by_role("combobox",name=re.compile("^Experience")).select_option(level)
             dialog.get_by_role("button",name=re.compile("Save preferences")).click()
             expect(dialog).to_have_count(0)
             self.page.reload()
@@ -184,8 +192,8 @@ class BrowserTests(unittest.TestCase):
         self.page.get_by_role("button",name="Edit your learning preferences",exact=True).click()
         dialog=self.page.get_by_role("dialog")
         expect(dialog.get_by_label("Display name",exact=True)).to_have_value("Updated E2E")
-        expect(dialog.get_by_label("My focus",exact=True)).to_have_value("sql")
-        expect(dialog.get_by_label("Experience",exact=True)).to_have_value("0")
+        expect(dialog.get_by_role("combobox",name=re.compile("^My focus"))).to_have_value("sql")
+        expect(dialog.get_by_role("combobox",name=re.compile("^Experience"))).to_have_value("0")
         dialog.get_by_label("Display name",exact=True).press("Escape")
         expect(dialog).to_have_count(0)
 
@@ -198,7 +206,7 @@ class BrowserTests(unittest.TestCase):
         self.page.get_by_role("button",name="Reset filters",exact=True).click()
         expect(rows).to_have_count(108)
         for language in ["Python","Java","SQL"]:
-            self.page.get_by_role("group",name="Problem language",exact=True).get_by_role("button",name=language,exact=True).click()
+            self.page.get_by_role("group",name="Problem language",exact=True).get_by_role("button",name=re.compile("^"+language)).click()
             expect(rows.first).to_be_visible()
             self.assertTrue(all(language in text for text in rows.locator("td:nth-child(4)").all_text_contents()))
         self.page.get_by_role("button",name="Reset filters",exact=True).click()
@@ -216,13 +224,18 @@ class BrowserTests(unittest.TestCase):
         self.open_problem()
         expect(self.page.get_by_role("heading",name="Sum of the positive values",exact=True)).to_be_visible()
         expect(self.page.get_by_role("button",name="Previous problem",exact=True)).to_be_disabled()
+        expect(self.page.get_by_role("heading",name="Examples",exact=True)).to_be_visible()
+        self.page.locator("summary").filter(has_text="Need a hint?").click()
+        expect(self.page.locator(".problem-hint[open]")).to_contain_text("running total")
         self.page.get_by_role("button",name="Next problem",exact=True).click()
         expect(self.page.get_by_role("heading",name="Running study totals",exact=True)).to_be_visible()
         self.page.get_by_role("button",name="Previous problem",exact=True).click()
-        splitter=self.page.get_by_role("separator").first
-        before=splitter.get_attribute("aria-valuenow")
-        splitter.press("ArrowRight")
-        self.assertNotEqual(splitter.get_attribute("aria-valuenow"),before)
+        for name,key in [("Resize description and code panels","ArrowRight"),
+                         ("Resize code editor and test panels","ArrowDown")]:
+            splitter=self.page.get_by_role("separator",name=name,exact=True)
+            before=splitter.get_attribute("aria-valuenow")
+            splitter.press(key)
+            self.assertNotEqual(splitter.get_attribute("aria-valuenow"),before)
         self.page.get_by_role("button",name=re.compile("Problem list")).click()
         expect(self.page.get_by_label("Search problems",exact=True)).to_be_visible()
 
@@ -233,11 +246,29 @@ class BrowserTests(unittest.TestCase):
         editor=self.page.locator(".cm-content")
         editor.fill("def solve(values):\n    return sum(x for x in values if x > 0)\n")
         # Wait for the UI's debounced storage, not an arbitrary sleep.
-        self.page.wait_for_function("() => Object.keys(localStorage).some(k => k.includes('draft') && (localStorage.getItem(k)||'').includes('return sum'))")
+        self.page.wait_for_function("() => Object.keys(localStorage).some(k => k.startsWith('wecode:code:') && (localStorage.getItem(k)||'').includes('return sum'))")
         self.page.get_by_role("button",name=re.compile("Problem list")).click()
         self.open_problem()
         self.page.get_by_role("group",name="Editor language",exact=True).get_by_role("button",name="Python",exact=True).click()
         expect(editor).to_contain_text("return sum")
+        for language,code,number in [("Java","// E2E Java draft\n",1),
+                                     ("SQL","-- E2E SQL draft\nSELECT 1;\n",None)]:
+            self.page.get_by_role("button",name=re.compile("Problem list")).click()
+            if number is None:
+                self.page.get_by_role("group",name="Problem language",exact=True).get_by_role("button",name=re.compile("^SQL")).click()
+                self.page.locator(".problem-table tbody tr").first.locator("td:nth-child(2) button").click()
+            else:
+                self.open_problem(number)
+            self.page.get_by_role("group",name="Editor language",exact=True).get_by_role("button",name=language,exact=True).click()
+            editor.fill(code)
+            self.page.wait_for_function("marker => Object.keys(localStorage).some(k => k.startsWith('wecode:code:') && (localStorage.getItem(k)||'').includes(marker))",arg="E2E "+language+" draft")
+            self.page.get_by_role("button",name=re.compile("Problem list")).click()
+            if number:
+                self.open_problem(number)
+            else:
+                self.page.locator(".problem-table tbody tr").first.locator("td:nth-child(2) button").click()
+            self.page.get_by_role("group",name="Editor language",exact=True).get_by_role("button",name=language,exact=True).click()
+            expect(editor).to_contain_text("E2E "+language+" draft")
         self.page.reload()
         self.workspace()
         self.open_problem()
@@ -254,8 +285,9 @@ class BrowserTests(unittest.TestCase):
             expect(self.page.locator(".ll-example code")).not_to_be_empty()
             expect(self.page.locator(".ll-language-footer a")).to_have_attribute("href",re.compile("^https://"))
             self.page.get_by_role("button",name=re.compile("View "+language+" lessons")).click()
-            expect(self.page.get_by_label("Language",exact=True)).to_have_value(language.lower())
-            expect(self.page.locator(".campus-table tbody tr").first).to_contain_text(language)
+            expect(self.page.get_by_role("group",name="Learning language",exact=True).get_by_role(
+                "button",name=re.compile("^"+language))).to_have_attribute("aria-pressed","true")
+            expect(self.page.get_by_role("heading",name=f"Your {language} foundation.",exact=True)).to_be_visible()
 
     def test_09_learning_notes_persist_without_browser_storage(self):  # #20
         self.signed_in()
@@ -266,7 +298,9 @@ class BrowserTests(unittest.TestCase):
             self.page.locator(".lw-route-topic").first.click()
             expect(self.page.get_by_role("heading",name="Worked example",exact=True)).to_be_visible()
             expect(self.page.get_by_role("button",name=re.compile("02 · Practice"))).to_be_disabled()
-            self.page.get_by_role("button",name=re.compile("I have read the notes")).click()
+            with self.page.expect_response(lambda r: "/api/rest/v1/learning_way_progress" in r.url and r.request.method == "POST") as saved:
+                self.page.get_by_role("button",name=re.compile("I have read the notes")).click()
+            self.assertTrue(saved.value.ok, saved.value.text())
             expect(self.page.locator(".lw-task-list > button")).to_have_count(5)
             expect(self.page.get_by_text("Progress synced with your account",exact=False).first).to_be_visible()
         self.new_context()
@@ -282,12 +316,19 @@ class BrowserTests(unittest.TestCase):
         search.fill("nonexistent-zzzz")
         expect(self.page.get_by_role("heading",name="No materials found.",exact=True)).to_be_visible()
         search.fill("E2E")
-        self.page.get_by_label("Language",exact=True).select_option("java")
+        self.page.get_by_role("combobox",name=re.compile("^Language")).select_option("java")
         expect(self.page.locator(".campus-table tbody tr")).to_have_count(1)
-        self.page.get_by_label("Status",exact=True).select_option("completed")
+        self.page.get_by_role("combobox",name=re.compile("^Status")).select_option("completed")
         expect(self.page.locator(".campus-table tbody tr")).to_have_count(0)
-        self.page.get_by_label("Status",exact=True).select_option("incomplete")
+        self.page.get_by_role("combobox",name=re.compile("^Status")).select_option("incomplete")
         expect(self.page.locator(".campus-table tbody tr")).to_have_count(1)
+        self.page.get_by_role("combobox",name=re.compile("^Language")).select_option("all")
+        tabs=self.page.get_by_role("group",name="Material type",exact=True)
+        tabs.get_by_role("button",name="Practice",exact=True).click()
+        expect(self.page.locator(".campus-table tbody tr")).to_have_count(1)
+        expect(self.page.locator(".campus-table tbody tr")).to_contain_text("E2E Python practice")
+        tabs.get_by_role("button",name="Lessons",exact=True).click()
+        expect(self.page.locator(".campus-table tbody tr")).to_have_count(3)
 
     def test_11_lesson_completion_fresh_login_and_isolation(self):  # #23
         self.signed_in()
@@ -321,6 +362,25 @@ class BrowserTests(unittest.TestCase):
         expect(self.page.locator(".campus-table tbody tr")).to_have_count(1)
         self.page.get_by_role("button",name="Unsave E2E Java foundations",exact=True).click()
         expect(self.page.get_by_role("heading",name="Keep good ideas close.",exact=True)).to_be_visible()
+        self.page.get_by_role("button",name=re.compile("Show all materials")).click()
+        self.page.locator(".campus-material").filter(has_text="E2E Java foundations").click()
+        self.page.get_by_role("button",name="Save for later",exact=True).click()
+        expect(self.page.get_by_role("button",name="Remove bookmark",exact=True)).to_be_visible()
+        first_email=self.email
+        self.page.get_by_role("button",name=re.compile("Sign out")).click()
+        self.email=f"e2e-{uuid4().hex}@example.invalid"
+        self.account()
+        self.login()
+        self.nav("Saved materials")
+        expect(self.page.get_by_role("heading",name="Keep good ideas close.",exact=True)).to_be_visible()
+        self.page.get_by_role("button",name=re.compile("Sign out")).click()
+        self.email=first_email
+        self.login()
+        self.nav("Saved materials")
+        expect(self.page.locator(".campus-table tbody tr")).to_have_count(1)
+        self.page.locator(".campus-material").first.click()
+        self.page.get_by_role("button",name="Remove bookmark",exact=True).click()
+        expect(self.page.get_by_role("button",name="Save for later",exact=True)).to_be_visible()
 
     def test_13_workspace_project_ideas(self):  # #25
         self.signed_in()

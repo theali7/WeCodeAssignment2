@@ -23,4 +23,4 @@ class RuntimeAcceptance(core.BrowserTests):
         self.page.get_by_role("group",name="Editor language",exact=True).get_by_role("button",name="Python",exact=True).click()
         self.page.locator(".cm-content").fill("def solve(values):\n    return sum(x for x in values if x > 0)\n")
         self.page.get_by_role("button",name=re.compile("Submit")).click()
-        expect(self.page.locator(".submission-report")).to_contain_text("Accepted",timeout=130000)
+        expect(self.page.locator(".submission-summary")).to_contain_text("Accepted",timeout=130000)
