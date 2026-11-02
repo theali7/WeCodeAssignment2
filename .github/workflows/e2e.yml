@@ -31,6 +31,9 @@ jobs:
       - name: Seed only the disposable CI database
         run: docker compose exec -T -e WECODE_DISPOSABLE_E2E=yes web python - < e2e/seed.py
       - run: python -m e2e.run
+      - name: Real language execution and full topic completion
+        if: matrix.shard == 0
+        run: python -m unittest e2e.runtime_acceptance -v
       - name: Save Compose logs
         if: always()
         run: |

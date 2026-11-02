@@ -1,0 +1,7 @@
+WeCode browser practice runtimes
+
+Pyodide 0.29.3, https://github.com/pyodide/pyodide (Mozilla Public License 2.0; Python components under their respective licenses). Runtime assets copied from the pinned npm package.
+PGlite 0.5.13, https://github.com/electric-sql/pglite (Apache 2.0 / PostgreSQL license). Assets copied from the pinned npm package.
+TeaVM javac, https://github.com/konsoletyper/teavm-javac (Apache 2.0). Runtime assets downloaded from https://teavm.org/playground/3/ on 2026-10-29. Includes OpenJDK components licensed under GPL v2 with Classpath Exception: https://openjdk.org/legal/gplv2+ce.html . TeaVM runtime: https://github.com/konsoletyper/teavm .
+
+These engines run on the visitor's device. Practice test results are client-side feedback, not a tamper-resistant competitive judge.

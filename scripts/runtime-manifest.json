@@ -1,0 +1,145 @@
+{
+  "provenance": {
+    "site_source_commit": "7bab7f837f32a537ad691e99af5b5c719f37205b",
+    "source_directory": "source/public/runtimes",
+    "captured_frontend_sha256": "be0b4df9432c2a679f8e6144ee59826b069c509b45099234222014a9310b8989"
+  },
+  "packages": [
+    {
+      "name": "pyodide",
+      "url": "https://registry.npmjs.org/pyodide/-/pyodide-0.29.3.tgz",
+      "sha256": "924f3167d6bf5e553bda392615eaa82edd82a9cffc32a1cc49853a926b148c5c",
+      "files": [
+        {
+          "path": "python/pyodide-lock.json",
+          "member": "package/pyodide-lock.json",
+          "sha256": "3256ffc76388de0e37f4b34d42ab484268d1afc675179ff97b2a5bb14f84ccac"
+        },
+        {
+          "path": "python/pyodide.asm.js",
+          "member": "package/pyodide.asm.js",
+          "sha256": "1263f02b5b26099b96112378156f242dd98b39a8201ba7765e5fe3d455c5ce91"
+        },
+        {
+          "path": "python/pyodide.asm.wasm",
+          "member": "package/pyodide.asm.wasm",
+          "sha256": "e2f4ee75b325e35eb31bfb8c613d4dd5098f5502c156a97847686875b5025480"
+        },
+        {
+          "path": "python/pyodide.mjs",
+          "member": "package/pyodide.mjs",
+          "sha256": "23213d27e9dacbda6f25f955fb38dabfc40ada082c04ee253047ea5dddcaa3b5"
+        },
+        {
+          "path": "python/python_stdlib.zip",
+          "member": "package/python_stdlib.zip",
+          "sha256": "4298b6ee445cb724c3973437da47789752b9e6ff4e26619026b283ec801fc46b"
+        }
+      ]
+    },
+    {
+      "name": "pglite",
+      "url": "https://registry.npmjs.org/@electric-sql/pglite/-/pglite-0.5.13.tgz",
+      "sha256": "5ccd9ac7761e8cd3e7b6469e41ecaf20c6f8ab81408565ae1644b71b30452bf3",
+      "files": [
+        {
+          "path": "postgres/initdb.wasm",
+          "member": "package/dist/initdb.wasm",
+          "sha256": "0730c91ee9d6bf1c060c618c7c1ca1adcbb14191828ef794a4d77a85f66d965f"
+        },
+        {
+          "path": "postgres/lib/chunk-23XIDXWY.js",
+          "member": "package/dist/chunk-23XIDXWY.js",
+          "sha256": "f08025660c733856f5142ec1d619233947dc92a1304f848ef34ca5e1d5a9601c"
+        },
+        {
+          "path": "postgres/lib/chunk-56IY7CVO.js",
+          "member": "package/dist/chunk-56IY7CVO.js",
+          "sha256": "2dbdd1cb09b10ab0d318195028876e7eeca47c285c0fadf5f1a25808425d98a1"
+        },
+        {
+          "path": "postgres/lib/chunk-5NF74D6L.js",
+          "member": "package/dist/chunk-5NF74D6L.js",
+          "sha256": "c4c86ec510655957fd52234395ce95ba478157c6d3ad509e0957b293d765537b"
+        },
+        {
+          "path": "postgres/lib/chunk-74YLKDNW.js",
+          "member": "package/dist/chunk-74YLKDNW.js",
+          "sha256": "e9461010d29d88c5fbca294518e41af73d4fbe086dee88513b427ccd848660b6"
+        },
+        {
+          "path": "postgres/lib/chunk-CMCHM6ZK.js",
+          "member": "package/dist/chunk-CMCHM6ZK.js",
+          "sha256": "a6cea51bbcfcef9f0d68e8d8193110109845bf8ddf00f66d27c4d7c05e54dfc8"
+        },
+        {
+          "path": "postgres/lib/chunk-F4GETNPB.js",
+          "member": "package/dist/chunk-F4GETNPB.js",
+          "sha256": "5ab11fd9fd74b259484f42a7855cd9569a5fe6ee1cf3c032238ac43a59511d97"
+        },
+        {
+          "path": "postgres/lib/chunk-IVSF7R5H.js",
+          "member": "package/dist/chunk-IVSF7R5H.js",
+          "sha256": "9fc2cc24ba62089dfcb212000f31c9210dcd8162967cc00eb84c6e7188a8b777"
+        },
+        {
+          "path": "postgres/lib/chunk-NNS5RQRF.js",
+          "member": "package/dist/chunk-NNS5RQRF.js",
+          "sha256": "e04c14da71c248d5e7e02f45df665b8e2b136526ee0bef419274bb2b345a1017"
+        },
+        {
+          "path": "postgres/lib/chunk-QY3QWFKW.js",
+          "member": "package/dist/chunk-QY3QWFKW.js",
+          "sha256": "bff6d3144dd6ea2689b00d9d0eea1ea2267b9cc14505fb9107b6194c1832bdea"
+        },
+        {
+          "path": "postgres/lib/index.js",
+          "member": "package/dist/index.js",
+          "sha256": "5a81ba32264e8a52d76871f37b479236586cf9ae90ca63a22c3623080e4de797"
+        },
+        {
+          "path": "postgres/lib/initdb.js",
+          "member": "package/dist/initdb.js",
+          "sha256": "4510946b04f0f09b95ebe1f21b4f195c56e50eeb513285ca51964eecf41abef5"
+        },
+        {
+          "path": "postgres/lib/pglite.js",
+          "member": "package/dist/pglite.js",
+          "sha256": "85ec1ff0021534525226f50516c0ca6b945ef45b56bd9fffb5784e2fb3a2dc96"
+        },
+        {
+          "path": "postgres/lib/templating.js",
+          "member": "package/dist/templating.js",
+          "sha256": "99508ccae5c9848d45b22d714a75649c5f8121840cf8000fda10000e3eaad767"
+        },
+        {
+          "path": "postgres/pglite.data",
+          "member": "package/dist/pglite.data",
+          "sha256": "2e46ee079b4a922f7514f2d6d17099bbcb2ac26b7db4938374d663caa07b435e"
+        },
+        {
+          "path": "postgres/pglite.wasm",
+          "member": "package/dist/pglite.wasm",
+          "sha256": "90d7b3859ee8e9e9e222c63f1d4c2907606b27a29453c508ee9bae7b48a544c2"
+        }
+      ]
+    }
+  ],
+  "files": [
+    {
+      "path": "teavm/compiler.wasm",
+      "url": "https://teavm.org/playground/3/compiler.wasm",
+      "sha256": "7f3828e4b7bddf5504dadebfc4016e40f4441e15ee0519071781813ba2ed3a4c"
+    },
+    {
+      "path": "teavm/compile-classlib.bin",
+      "url": "https://teavm.org/playground/3/compile-classlib-teavm.bin",
+      "sha256": "e80ae10423a39290c5f20b6bb6da34d21c3ad0a75cd8dbdda4998d2813045e15"
+    },
+    {
+      "path": "teavm/runtime-classlib.bin",
+      "url": "https://teavm.org/playground/3/runtime-classlib-teavm.bin",
+      "sha256": "ea670e71967eda93828cb894c1741a8ed2e94b3422eb99cb9eccec0de67daaa8"
+    }
+  ]
+}
