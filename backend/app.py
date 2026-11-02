@@ -341,6 +341,8 @@ def write_table(table: str, body: list[dict] | dict, request: Request):
 
 
 if STATIC.exists():
+    if (STATIC / "runtimes").is_dir():
+        app.mount("/runtimes", StaticFiles(directory=STATIC / "runtimes"), name="runtimes")
     app.mount("/assets", StaticFiles(directory=STATIC / "assets"), name="assets")
     app.mount("/fonts", StaticFiles(directory=STATIC / "fonts"), name="fonts")
     app.mount("/tech", StaticFiles(directory=STATIC / "tech"), name="tech")

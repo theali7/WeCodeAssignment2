@@ -12,6 +12,7 @@ class FrontendWiringTests(unittest.TestCase):
             (root / "assets").mkdir()
             bundle = root / "assets/index-DXabLyQE.js"
             bundle.write_text("var Ga=`https://oapnfhnvisujhrfdvklm.supabase.co`,Ka=`public`;")
+            (root / "assets/problems-DIwfYwGF.js").write_text("e.languages.includes(`Python`)?`Python`:`SQL`")
             import sys
             result = subprocess.run([sys.executable, str(script), str(root)], capture_output=True)
             self.assertEqual(result.returncode, 0)

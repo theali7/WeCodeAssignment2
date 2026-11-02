@@ -24,3 +24,10 @@ logs/
 __pycache__/
 .venv/
 e2e-results/
+
+# Reassembled from checksum-pinned upstream distributions during image build.
+/recovered-publication/runtimes/postgres/
+/recovered-publication/runtimes/python/*
+!/recovered-publication/runtimes/python/package.json
+/recovered-publication/runtimes/teavm/*.bin
+/recovered-publication/runtimes/teavm/*.wasm

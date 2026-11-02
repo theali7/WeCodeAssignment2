@@ -6,6 +6,8 @@ RUN pip install --no-cache-dir -r /app/backend/requirements.txt
 RUN useradd --create-home --uid 10001 wecode
 COPY backend/ /app/backend/
 COPY recovered-publication/ /app/static/
+COPY scripts/prepare_runtimes.py scripts/runtime-manifest.json /app/scripts/
+RUN python /app/scripts/prepare_runtimes.py /app/static/runtimes
 COPY scripts/prepare_frontend.py /app/scripts/prepare_frontend.py
 RUN python /app/scripts/prepare_frontend.py /app/static
 USER wecode

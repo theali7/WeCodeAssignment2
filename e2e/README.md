@@ -26,26 +26,24 @@ The default URL is http://localhost:8080. Only localhost, 127.0.0.1 or the Compo
 | #15 | Problem catalogue | test_05; 108 rows, search/empty/reset, three languages, difficulty/topic/title sorting. |
 | #16 | Problem detail | test_06; next/previous/list and keyboard splitter. Examples, hint and both splitters. |
 | #17 | Editor drafts | test_07; Python edit/reopen/reload; Java/SQL edit/reopen. |
-| #18 | Real execution / reports | Blocked: missing runtimes/ assets. runtime_acceptance.py deliberately fails on missing Python worker. Java/SQL, wrong answer/error/cancel/metrics remain. |
+| #18 | Real execution / reports | runtime_acceptance.py: all three engines, Run/Submit, accepted/wrong/error results, metrics and Python stop/restart. |
 | #19 | Learn Languages | test_08; all three language cards, code examples, reference URLs and Learning Way navigation. |
 | #20 | Learning Way notes | test_09; all three paths, notes, practice gating/five exercises, SQL notes persist in a new context. |
-| #21 | Completed Learning Way topic | Blocked by #18. Notes read is not the same as passing all five exercises or a completed topic checkmark. |
+| #21 | Completed Learning Way topic | runtime_acceptance.py: first topic in each language, five real accepted exercises, next topic and completed status after a fresh login. |
 | #22 | Library | test_10; search, empty result, language/status filters. Lesson/practice tabs. |
 | #23 | Lesson progress | test_11; reader, complete, 25% of four fixture lessons, fresh login and another account's zero progress. |
 | #24 | Bookmarks | test_12; library save, saved list, reload, unsave. Reader save/remove and same-browser other-account isolation. |
 | #25 | Workspace | test_13; sidebar, project inspiration and progress. Announcements and Leaderboards are static labels; not functional destinations. |
 | #26 | Unavailable integrations | test_14; disabled Google/GitHub, recovery reports unsupported rather than false success. This does not test working OAuth/email. |
 
-All feature issues stay open until their complete criteria have passing evidence. A passing core suite is not a claim of all-feature coverage. First-run execution results are available in Actions; do not infer a pass from the presence of tests.
+Feature issues close only after passing Actions evidence. A passing core suite alone is not proof of real execution/topic completion; the separate six-scenario suite must also pass.
 
-## Missing runtime acceptance
+## Runtime and topic acceptance
 
 ```sh
 WECODE_DISPOSABLE_E2E=yes python3 -m unittest e2e.runtime_acceptance -v
 ```
 
-This explicit gate must fail while the captured workers are missing. It is excluded from the core suite by its filename and is not counted as passing or skipped coverage. The default workflow covers the core scenarios; full assignment acceptance (#5) remains open until #18/#21 and the remaining scenarios above are implemented and pass. No fake worker or canned execution result is used.
+The six additional scenarios run in CI group 0: real Python/Java/SQL Run/Submit, accepted/wrong/error outcomes, reports/metrics and Python cancellation/restart; then five actual accepted exercises for the first topic in each language and completed-topic persistence in a new browser context. No worker results or progress responses are mocked. The 14 core scenarios still run separately. Acceptance is based on the actual Actions result, not merely the presence of test code.
 
-References: [Playwright Python installation](https://playwright.dev/python/docs/intro), [CI setup](https://playwright.dev/python/docs/ci).
-
-CI runs three independent groups on separate ephemeral stacks. This keeps each run below the normal authentication-attempt limit without weakening that limit. Local discovery runs all scenarios serially and may encounter the normal rate limit if executed rapidly.
+CI runs three independent groups on separate ephemeral stacks, keeping normal authentication limits. Local serial runs may encounter normal rate limits if repeated quickly. Runtime provenance and reproducible download checksums are recorded in scripts/runtime-manifest.json and DOCKER_SETUP.md.
