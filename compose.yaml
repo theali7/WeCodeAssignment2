@@ -1,9 +1,29 @@
 name: wecode-assignment2
 services:
   web:
-    build:
-      context: .
-      target: preview
+    build: .
     ports:
       - "127.0.0.1:8080:8080"
+    environment:
+      DATABASE_URL: "postgresql://wecode:${POSTGRES_PASSWORD:?Run python3 scripts/setup_env.py first}@db:5432/wecode"
+      AUTH_SECRET: "${AUTH_SECRET:?Run python3 scripts/setup_env.py first}"
+    depends_on:
+      db:
+        condition: service_healthy
     restart: unless-stopped
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: wecode
+      POSTGRES_DB: wecode
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:?Run python3 scripts/setup_env.py first}"
+    volumes:
+      - assignment_postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U wecode -d wecode"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+volumes:
+  assignment_postgres:
